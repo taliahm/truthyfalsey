@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Truthy Falsey</title>
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/styles/default.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato&family=Montserrat&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Lato';
+            background-color: #2F3061;
+        }
+        section {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .wrapper {
+            width: 75%;
+            margin: 0 auto;
+            text-align: center;
+            padding: 40px;
+            background-color: #DFDFDF;
+            border: 14px solid #0E34A0;
+            border-radius: 10px;
+        }
+        label {
+            font-family: 'Montserrat';
+            font-size: 20px;
+            margin-right: 13px;
+        }
+        .button {
+            margin: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #5F5980;
+            border: none;
+            color: white;
+            transition: all 0.3s ease-out;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #2F3061;
+        }
+
+        .correct {
+            /* color: #A1E8AF; */
+            font-weight: bold;
+            font-size: 20px;
+            text-shadow: 2px 2px 2px #A1E8AF;
+        }
+
+        .wrong {
+            font-weight: bold;
+            font-size: 20px;
+            text-shadow: 2px 2px 2px #FB3640;
+        }
+
+    </style>
+</head>
+<body>
+    <section>
+        <div class="wrapper">
+        <!-- <p id="addQuestion"></p> -->
+            <h2>Will this expression evaluate to true or false?</h2>
+            <pre><code class="javascript"><p id="addQuestion"></p></code></pre>
+            <input id="true" name="answer" type="radio" value="true">
+            <label for="true">true</label>
+            <input id="false" name="answer" type="radio" value="false">
+            <label for="false">false</label>
+            <h4 id="result"></h4>
+            <div class="button"><button id="check">Check</button></div>
+            <div class="button"><button id="next">Next</button></div>
+        </div>
+    </section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/highlight.min.js"></script>
+    <script src='https://code.jquery.com/jquery-3.4.0.min.js' integrity='sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=' crossorigin='anonymous'></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+        const questions = [
+            {
+            evalTo: 'true',
+            statement: `'yellow' !== 'green'`
+        },
+        {
+            evalTo: 'false',
+            statement: `'cat' === 'dog'` 
+        },
+        {
+            evalTo: 'false',
+            statement: `7 > 14`,
+        },
+        {
+            evalTo: 'true',
+            statement: `1 > 2 || 3 === 3`,
+        },
+        {
+            evalTo: 'false',
+            statement: `const year = 2014;</br>year === 2015`,
+        },
+        {
+            evalTo: 'false',
+            statement: `'one' !== 'one' || 5 !== 5`,
+        },
+        {
+            evalTo: 'false',
+            statement: `0`,
+        },
+        {
+            evalTo: 'true',
+            statement: `const num = 2;</br>num + 2 === 4`,
+        },
+        {
+            evalTo: 'true',
+            statement: `const age = 18;</br>age <= 18`,
+        },
+        {
+            evalTo: 'true',
+            statement: `const cheese = 'gouda';</br>cheese === 'gouda' || cheese === 'brie'`,
+        },
+        {
+            evalTo: 'false',
+            statement: `const amSleepy = true;</br>const hour = 14;</br>amSleepy === false && hour > 18`,
+        },
+        {
+            evalTo: 'false',
+            statement: `const isRaining = true;</br>const month = 12;</br>month < 6 && isRaining === false
+            `
+        },
+
+    ]
+        let currentQuestion = 0;
+        const firstQuestion = questions[0];
+        $('#addQuestion').text(firstQuestion.statement)
+        $('#check').on('click', function() {
+            console.log('hello?');
+            const question = questions[currentQuestion];
+            const { evalTo } = question;
+            const input = $('input[name=answer]:checked').val();
+            if (evalTo === input) {
+                $('#result').text('Correct!!!').removeClass('wrong').addClass('correct');
+            } else {
+                $('#result').text('Try again!').removeClass('correct').addClass('wrong');
+            }
+        })
+        $('#next').on('click', function() {
+            if (questions.length - 1 === currentQuestion) {
+                $('#result').text(`Great job! You've solved all the problems!`).addClass('correct');
+                return;
+            } 
+            currentQuestion = currentQuestion + 1;
+            const newQuestion = questions[currentQuestion];
+            $('#addQuestion').html(newQuestion.statement)
+            $('#result').text('').removeClass('wrong', 'correct');
+            document.querySelectorAll('pre code').forEach((block) => {
+                 hljs.highlightBlock(block);
+            });
+        })
+    </script>
+</body>
+</html>
